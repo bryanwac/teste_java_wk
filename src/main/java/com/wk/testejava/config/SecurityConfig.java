@@ -1,16 +1,19 @@
 package com.wk.testejava.config;
 
+import com.wk.testejava.enums.EPermissao;
 import com.wk.testejava.exception.JwtAuthEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,12 +37,12 @@ public class SecurityConfig {
                     try {
                         authorize
                                 .requestMatchers("/m/**").permitAll()
-                                .anyRequest().permitAll()
+                                .anyRequest().hasRole("USER")
                                 .and()
                                 .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                                 .exceptionHandling()
-                                .authenticationEntryPoint(unauthorizedHandler).and()
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
                                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                     } catch (Exception e) {
                         throw new RuntimeException(e);

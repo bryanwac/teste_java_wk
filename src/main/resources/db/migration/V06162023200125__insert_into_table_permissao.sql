@@ -7,8 +7,8 @@ BEGIN
     SET foreign_key_checks = 0;
 
     -- Inserir manualmente as permissões na tabela
-INSERT INTO permissao(per_nome) VALUES('PERM_USER');
-INSERT INTO permissao(per_nome) VALUES('PERM_ADMIN');
+INSERT INTO permissao(per_nome) VALUES('ROLE_USER');
+INSERT INTO permissao(per_nome) VALUES('ROLE_ADMIN');
 
 SET foreign_key_checks = 1;
 END //

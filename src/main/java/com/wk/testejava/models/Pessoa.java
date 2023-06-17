@@ -1,9 +1,14 @@
 package com.wk.testejava.models;
 
+import com.wk.testejava.exception.ApiException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -18,12 +23,12 @@ public class Pessoa {
     private Long id;
     @Column(name = "pes_nome")
     private String nome;
-    @Column(name = "pes_cpf")
+    @Column(name = "pes_cpf", unique = true)
     private String cpf;
     @Column(name = "pes_rg")
     private String rg;
     @Column(name = "pes_data_nascimento")
-    private String dataNascimento;
+    private String data_nasc;
     @Column(name = "pes_sexo")
     private String sexo;
     @Column(name = "pes_mae")
@@ -45,7 +50,7 @@ public class Pessoa {
     @Column(name = "pes_estado")
     private String estado;
     @Column(name = "pes_telefone_fixo")
-    private String telefoneFixo;
+    private String telefone_fixo;
     @Column(name = "pes_celular")
     private String celular;
     @Column(name = "pes_altura")
@@ -53,15 +58,31 @@ public class Pessoa {
     @Column(name = "pes_peso")
     private double peso;
     @Column(name = "pes_tipo_sanguineo")
-    private String tipoSanguineo;
+    private String tipo_sanguineo;
 
     @Column(name = "pes_imc")
     private double imc;
 
+    @Column(name = "pes_pode_doar_sangue")
+    private boolean podeDoarSangue = false;
+
     @PrePersist
-    private void calcularIMC() {
-        double alturaMetros = altura / 100;
-        this.imc = peso / (alturaMetros * alturaMetros);
+    private void verificaPodeDoarEIMC() {
+
+        //Calculo IMC
+        double alturaMetros = this.altura;
+        this.imc = this.peso / (alturaMetros * alturaMetros);
+
+        //Verificação para poder doar
+        LocalDate hoje = LocalDate.now();
+        String dataNascimentoSemEscape = this.data_nasc.replace("\\", "");
+        LocalDate dataNascimentoLocalDate = LocalDate.parse(dataNascimentoSemEscape, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        int idade = Period.between(dataNascimentoLocalDate, hoje).getYears();
+        if (idade >= 16 && idade <= 69 && this.peso > 50) {
+            this.podeDoarSangue = true;
+        } else {
+            this.podeDoarSangue = false;
+        }
     }
 
 }

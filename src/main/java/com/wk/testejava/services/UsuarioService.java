@@ -52,7 +52,7 @@ public class UsuarioService {
             String token = null;
 
             if (strRoles == null) {
-                Permissao userRole = permRepository.findByNome(EPermissao.PERM_USER)
+                Permissao userRole = permRepository.findByNome(EPermissao.ROLE_USER)
                         .orElseThrow(() -> new ApiException("Permissão não encontrada"));
                 permissoesUsuario.add(userRole);
 
