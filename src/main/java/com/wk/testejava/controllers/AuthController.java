@@ -25,9 +25,4 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
     }
-
-    @GetMapping("/permissoes")
-    public ResponseEntity<?> buscaPermissoes() {
-        return ResponseEntity.ok(service.buscaPermissoes());
-    }
 }

@@ -111,8 +111,15 @@ public class UsuarioService {
         });
     }
 
-    public List<String> buscaPermissoes() {
-        return null;
-        //TODO: implementar logica para buscar permissoes no BD
+    public Set<Permissao> buscaPermissoes() {
+        Usuario usuario = buscaUsuarioLogado();
+        return usuario.getPermissoes();
+    }
+
+    private Usuario buscaUsuarioLogado() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return repository.findByEmail(auth.getName()).orElseThrow(() -> {
+            throw new ApiException("Usuário não encontrado");
+        });
     }
 }
