@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -39,5 +40,16 @@ public class PessoaController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<?> atualizarPessoa(@PathVariable Long id, @RequestBody Map<Object, Object> map) {
         return ResponseEntity.status(HttpStatus.OK).body(service.patch(id, map));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> buscaTodos(@RequestParam Optional<Integer> page,
+                                        @RequestParam Optional<Integer> size,
+                                        @RequestParam Optional<String> cpf) {
+        try {
+            return cpf.map(s -> ResponseEntity.ok().body(service.buscaPorCpfContem(s, page.orElse(0), size.orElse(10)))).orElseGet(() -> ResponseEntity.ok().body(service.buscaTodos(page.orElse(0), size.orElse(10))));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
