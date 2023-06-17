@@ -6,9 +6,13 @@ import com.wk.testejava.repositories.PessoaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,29 @@ public class PessoaService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new ApiException("Erro ao processar lista!");
+        }
+    }
+
+    public Pessoa patch(Long id, Map<Object, Object> map) {
+        try {
+            Pessoa registro = repository.findById(id).orElseThrow(() -> {
+                throw new ApiException("Pessoa não encontrada");
+            });
+            map.forEach((key, value) -> {
+                Optional<Field> optionalField = Optional.ofNullable(ReflectionUtils.findField(Pessoa.class, key.toString()));
+                if (optionalField.isPresent()) {
+                    Field field = optionalField.get();
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, registro, value);
+                }
+            });
+            return repository.save(registro);
+        } catch (ApiException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ApiException("Erro ao atualizar informações da pessoa");
         }
     }
 

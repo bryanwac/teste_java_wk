@@ -5,12 +5,10 @@ import com.wk.testejava.services.PessoaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -36,5 +34,10 @@ public class PessoaController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar lista: " + e.getMessage());
         }
+    }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<?> atualizarPessoa(@PathVariable Long id, @RequestBody Map<Object, Object> map) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.patch(id, map));
     }
 }
