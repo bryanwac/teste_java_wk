@@ -30,4 +30,9 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     @Query("SELECT p FROM Pessoa p WHERE p.tipo_sanguineo = :tipoSanguineo")
     List<Pessoa> findByTipoSanguineo(@Param("tipoSanguineo") String tipoSanguineo);
 
+    @Query("SELECT COUNT(p) FROM Pessoa p WHERE p.tipo_sanguineo = ?1 AND p.podeDoarSangue = true")
+    long countByTipoSanguineoAndPodeDoarSangueTrue(String tipoSanguineo);
+
+    @Query("SELECT COUNT(p) FROM Pessoa p WHERE p.tipo_sanguineo IN (?1) AND p.podeDoarSangue = true")
+    long countByTipoSanguineoAndPodeDoarSangueTrueIn(List<String> tiposSanguineos);
 }

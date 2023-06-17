@@ -16,5 +16,7 @@ public class EstatisticaDTO {
     private int obesosMulheres;
     private List<EstatisticaTipoSangDTO> estatisticaPorTipoSang;
 
+    private List<EstatisticaRelacaoDoadoresDTO> relacaoDoadores;
+
 
 }
