@@ -3,10 +3,14 @@ package com.wk.testejava.services;
 import com.wk.testejava.dto.EstatisticaDTO;
 import com.wk.testejava.dto.EstatisticaTipoSangDTO;
 import com.wk.testejava.exception.ApiException;
+import com.wk.testejava.models.Pessoa;
 import com.wk.testejava.repositories.PessoaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +49,9 @@ public class EstatisticaService {
             List<String> tiposSanguineos = pessoaRepository.findDistinctTipoSanguineo();
 
             for (String tipoSanguineo : tiposSanguineos) {
-                Double mediaIdade = pessoaRepository.calcularMediaIdadePorTipoSanguineo(tipoSanguineo);
-                if (mediaIdade != null) {
+                List<Pessoa> pessoasPorTipoSanguineo = pessoaRepository.findByTipoSanguineo(tipoSanguineo);
+                if (!pessoasPorTipoSanguineo.isEmpty()) {
+                    Double mediaIdade = calcularMediaIdade(pessoasPorTipoSanguineo);
                     EstatisticaTipoSangDTO estatisticaTipoSangDTO = new EstatisticaTipoSangDTO();
                     estatisticaTipoSangDTO.setTipoSanguineo(tipoSanguineo);
                     estatisticaTipoSangDTO.setMediaIdade(mediaIdade);
@@ -58,7 +63,22 @@ public class EstatisticaService {
 
             return estatisticaDTO;
         } catch (Exception e) {
-            throw new ApiException("Erro ao obter estatisticas");
+            e.printStackTrace();
+            throw new ApiException("Erro ao obter estatísticas");
         }
     }
+
+    private Double calcularMediaIdade(List<Pessoa> pessoas) {
+        LocalDate currentDate = LocalDate.now();
+        int totalIdades = 0;
+
+        for (Pessoa pessoa : pessoas) {
+            LocalDate dataNasc = LocalDate.parse(pessoa.getData_nasc(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            int idade = Period.between(dataNasc, currentDate).getYears();
+            totalIdades += idade;
+        }
+
+        return totalIdades / (double) pessoas.size();
+    }
+
 }
