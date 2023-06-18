@@ -31,12 +31,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(authorize -> {
                     try {
                         authorize
-                                .requestMatchers("/m/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/m/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/m/registro").permitAll()
                                 .anyRequest().hasRole("USER")
                                 .and()
                                 .authenticationProvider(authenticationProvider)
