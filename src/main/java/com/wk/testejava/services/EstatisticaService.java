@@ -3,12 +3,15 @@ package com.wk.testejava.services;
 import com.wk.testejava.dto.EstatisticaDTO;
 import com.wk.testejava.dto.EstatisticaRelacaoDoadoresDTO;
 import com.wk.testejava.dto.EstatisticaTipoSangDTO;
+import com.wk.testejava.dto.IMCMedioPorFaixaIdadeDTO;
 import com.wk.testejava.exception.ApiException;
+import com.wk.testejava.models.CandidatosPorEstadoDTO;
 import com.wk.testejava.models.Pessoa;
 import com.wk.testejava.repositories.PessoaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +79,10 @@ public class EstatisticaService {
             }
 
             estatisticaDTO.setRelacaoDoadores(relacaoDoadores);
+
+            estatisticaDTO.setCandidatosPorEstado(this.obterCandidatosPorEstado());
+
+            estatisticaDTO.setImcMedioPorFaixaEtaria(this.obterIMCMedioPorFaixaIdade());
 
             return estatisticaDTO;
         } catch (Exception e) {
@@ -140,5 +148,40 @@ public class EstatisticaService {
         return quantidade;
     }
 
+    public List<CandidatosPorEstadoDTO> obterCandidatosPorEstado() {
+        List<Object[]> resultados = pessoaRepository.countPessoasPorEstado();
+        List<CandidatosPorEstadoDTO> candidatosPorEstado = new ArrayList<>();
+
+        for (Object[] resultado : resultados) {
+            String estado = (String) resultado[0];
+            Long quantidade = ((Number) resultado[1]).longValue();
+            candidatosPorEstado.add(new CandidatosPorEstadoDTO(estado, quantidade));
+        }
+
+        return candidatosPorEstado;
+    }
+
+    public List<IMCMedioPorFaixaIdadeDTO> obterIMCMedioPorFaixaIdade() {
+        List<Pessoa> pessoas = pessoaRepository.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        List<IMCMedioPorFaixaIdadeDTO> imcMedioPorFaixaIdade = pessoas.stream()
+                .collect(Collectors.groupingBy(pessoa -> {
+                    LocalDate dataNascimento = LocalDate.parse(pessoa.getData_nasc(), formatter);
+                    int faixa = (LocalDate.now().getYear() - dataNascimento.getYear()) / 10;
+                    int faixaInicial = faixa * 10;
+                    int faixaFinal = faixaInicial + 9;
+                    return faixaInicial + " a " + faixaFinal;
+                }))
+                .entrySet().stream()
+                .map(entry -> {
+                    String faixaIdade = entry.getKey();
+                    double imcMedio = entry.getValue().stream().mapToDouble(Pessoa::getImc).average().orElse(0.0);
+                    return new IMCMedioPorFaixaIdadeDTO(faixaIdade, imcMedio);
+                })
+                .collect(Collectors.toList());
+
+        return imcMedioPorFaixaIdade;
+    }
 
 }
