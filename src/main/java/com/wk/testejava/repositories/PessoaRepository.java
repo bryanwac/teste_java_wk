@@ -1,5 +1,6 @@
 package com.wk.testejava.repositories;
 
+import com.wk.testejava.models.CandidatosPorEstadoDTO;
 import com.wk.testejava.models.Pessoa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,18 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     List<Pessoa> findBySexoIgnoreCaseAndImcGreaterThan(String sexo, double imc);
-    Page<Pessoa> findByCpfContainsIgnoreCase(String cpf, Pageable pageable);
-    boolean existsByCpf(String cpf);
 
-//    @Query(value = "SELECT AVG(YEAR(CAST(CURRENT_DATE() AS DATE)) - YEAR(CAST(STR_TO_DATE(p.data_nasc, '%d-%m-%Y') AS DATE))) " +
-//            "FROM Pessoa p WHERE p.tipo_sanguineo = :tipoSanguineo")
-//    Double calcularMediaIdadePorTipoSanguineo(@Param("tipoSanguineo") String tipoSanguineo);
+    Page<Pessoa> findByCpfContainsIgnoreCase(String cpf, Pageable pageable);
+
+    boolean existsByCpf(String cpf);
 
     long countBySexo(String sexo);
 
@@ -30,9 +27,10 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     @Query("SELECT p FROM Pessoa p WHERE p.tipo_sanguineo = :tipoSanguineo")
     List<Pessoa> findByTipoSanguineo(@Param("tipoSanguineo") String tipoSanguineo);
 
-    @Query("SELECT COUNT(p) FROM Pessoa p WHERE p.tipo_sanguineo = ?1 AND p.podeDoarSangue = true")
-    long countByTipoSanguineoAndPodeDoarSangueTrue(String tipoSanguineo);
-
     @Query("SELECT COUNT(p) FROM Pessoa p WHERE p.tipo_sanguineo IN (?1) AND p.podeDoarSangue = true")
     long countByTipoSanguineoAndPodeDoarSangueTrueIn(List<String> tiposSanguineos);
+
+    @Query(value = "SELECT estado, COUNT(*) AS quantidade FROM Pessoa GROUP BY estado")
+    List<Object[]> countPessoasPorEstado();
+
 }

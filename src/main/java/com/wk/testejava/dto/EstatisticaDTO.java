@@ -1,5 +1,6 @@
 package com.wk.testejava.dto;
 
+import com.wk.testejava.models.CandidatosPorEstadoDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,10 @@ public class EstatisticaDTO {
     private List<EstatisticaTipoSangDTO> estatisticaPorTipoSang;
 
     private List<EstatisticaRelacaoDoadoresDTO> relacaoDoadores;
+
+    private List<CandidatosPorEstadoDTO> candidatosPorEstado;
+
+    private List<IMCMedioPorFaixaIdadeDTO> imcMedioPorFaixaEtaria;
 
 
 }
