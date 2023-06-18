@@ -101,7 +101,7 @@ public class UsuarioService {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ApiException("Erro ao fazer login");
+            throw new ApiException("Email ou senha inválidos.");
         }
     }
 

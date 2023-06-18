@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/p")
+@RequestMapping("/permissoes")
 public class PermissoesController {
 
     private final UsuarioService service;
