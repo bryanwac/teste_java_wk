@@ -38,9 +38,17 @@ Para executar o backend, siga as etapas abaixo:
 
 1. Certifique-se de ter o JDK (Java Development Kit) instalado em sua máquina e Java 17.
 
-1.1. Crie um novo scheema no banco de dados MySQL com o nome: teste_wk
+2. Clone o repositório do aplicativo para o seu ambiente local.
 
-1.2. Defina a senha e usuário da conexão local do banco de dados como: 
+```shell
+git clone https://github.com/bryanwac/teste_java_wk.git
+```
+
+3. Navegue até o diretório raiz do backend e execute com sua IDE preferida (Recomenddado: IntelliJ).
+
+3.1. Crie um novo scheema no banco de dados MySQL com o nome: teste_wk
+
+3.2. Defina a senha e usuário da conexão local do banco de dados como: 
 ```shell
       username: root
       password: root
@@ -56,14 +64,6 @@ Acesse o arquivo application-dev.yaml e altere os dados do parametro:
     username: "_usuario desejado_"
     password: "_senha desejada_"
  ```
-
-2. Clone o repositório do aplicativo para o seu ambiente local.
-
-```shell
-git clone https://github.com/bryanwac/teste_java_wk.git
-```
-
-3. Navegue até o diretório raiz do backend e execute com sua IDE preferida (Recomenddado: IntelliJ).
 
 
 4. Compile e execute o aplicativo usando o Maven.
