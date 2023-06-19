@@ -54,9 +54,7 @@ Execute o projeto utilizando sua IDE ou executando a classe principal.
 
 ```
 
-5. O backend será iniciado e est
-
-ará acessível em `http://localhost:8080`.
+5. O backend será iniciado e estará acessível em `http://localhost:8080`.
 
 Agora você pode integrar o frontend do aplicativo com o backend para obter todas as funcionalidades do Teste-Java.
 
