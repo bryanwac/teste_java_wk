@@ -41,17 +41,21 @@ Para executar o backend, siga as etapas abaixo:
 1.1. Crie um novo scheema no banco de dados MySQL com o nome: teste_wk
 
 1.2. Defina a senha e usuário da conexão local do banco de dados como: 
+```shell
       username: root
       password: root
+```
 ou
 
 Acesse o arquivo application-dev.yaml e altere os dados do parametro:
-  
+ 
+ ```shell
   spring:
   datasource:
     url: jdbc:mysql://localhost:3306/"_nome do banco desejado_"?useSSL=false
     username: "_usuario desejado_"
     password: "_senha desejada_"
+ ```
 
 2. Clone o repositório do aplicativo para o seu ambiente local.
 
