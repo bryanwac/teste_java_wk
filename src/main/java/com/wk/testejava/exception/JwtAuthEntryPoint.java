@@ -27,9 +27,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         errorDetails.setStatus(401);
         response.setStatus(errorDetails.getStatus());
         errorDetails.setTimestamp(new Date());
-        errorDetails.setException(authException);
-        errorDetails.setDetails(authException.getMessage());
-        errorDetails.setMessage("O Email ou Senha inseridos estão incorretos!");
+        errorDetails.setMessage("Sua sessão expirou, faça login para continuar");
 
         OutputStream out = response.getOutputStream();
         ObjectMapper mapper = new ObjectMapper();
