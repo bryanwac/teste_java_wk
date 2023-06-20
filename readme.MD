@@ -1,4 +1,4 @@
-# Backend do Teste-Java
+# Backend Banco de Sangue App
 
 Este é o backend do aplicativo Teste-Java, desenvolvido em Java utilizando o framework Spring Boot. O backend fornece APIs e serviços para processamento de dados do aplicativo.
 Base: Java 17 / Spring boot 3.0.1
